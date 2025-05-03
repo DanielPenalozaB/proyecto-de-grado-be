@@ -1,0 +1,47 @@
+{
+  "name": "proyecto-de-grado-be",
+  "version": "1.0.0",
+  "description": "Backend project for university degree",
+  "main": "dist/server.js",
+  "scripts": {
+    "start": "node dist/server.js",
+    "dev": "nodemon src/server.ts",
+    "build": "tsc",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "migration:run": "npm run typeorm migration:run -- -d src/config/database.ts",
+    "migration:generate": "npm run typeorm migration:generate -- -d src/config/database.ts",
+    "migration:create": "npm run typeorm migration:create",
+    "migration:revert": "npm run typeorm migration:revert -- -d src/config/database.ts",
+    "docker:dev": "docker-compose up",
+    "docker:dev:build": "docker-compose up --build",
+    "docker:dev:recreate": "docker-compose up --build --force-recreate",
+    "docker:down": "docker-compose down",
+    "docker:down:volumes": "docker-compose down -v",
+    "docker:logs": "docker-compose logs -f",
+    "docker:ps": "docker-compose ps",
+    "docker:api:bash": "docker-compose exec api sh"
+  },
+  "dependencies": {
+    "@nestjs/swagger": "^11.1.6",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "pg": "^8.11.3",
+    "reflect-metadata": "^0.1.13",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "typeorm": "^0.3.17"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.15",
+    "@types/express": "^4.17.20",
+    "@types/node": "^20.8.10",
+    "@types/swagger-jsdoc": "^6.0.2",
+    "@types/swagger-ui-express": "^4.1.5",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  }
+}
