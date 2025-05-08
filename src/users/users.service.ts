@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import { AppDataSource } from '../config/database';
+import { AppDataSource } from '../config/typeorm.config';
 import { User } from './entities/users.entity';
+import * as bcrypt from 'bcrypt';
 
 const userRepository = AppDataSource.getRepository(User);
 
@@ -89,3 +90,9 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
     res.status(500).json({ message: 'Error deleting example', error });
   }
 };
+
+
+export const hashPassword = async (password: string): Promise<string> => {
+  const saltRounds = 10;
+  return bcrypt.hash(password, saltRounds);
+}

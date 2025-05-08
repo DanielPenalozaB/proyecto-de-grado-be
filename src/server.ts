@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { AppDataSource } from './config/database';
+import { AppDataSource } from './config/typeorm.config';
 import app from './app';
 import { env } from './config/env';
 

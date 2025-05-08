@@ -6,7 +6,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';import { Roles } from '../enums/roles';
+import { Exclude } from 'class-transformer';
+import { Roles } from '../enums/roles';
 
 /**
  * @swagger
