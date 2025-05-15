@@ -1,21 +1,18 @@
-import { Request, Response } from 'express';
-import { AppDataSource } from '../config/typeorm.config';
-import { User } from './entities/users.entity';
 import * as bcrypt from 'bcrypt';
+import { plainToClass } from 'class-transformer';
+import { validate } from 'class-validator';
+import { addHours } from 'date-fns';
+import { Request, Response } from 'express';
+import { Brackets, MoreThan } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
+import { AppDataSource } from '../config/typeorm.config';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
-import { validate } from 'class-validator';
-import { plainToClass } from 'class-transformer';
-import { Brackets, FindOptionsOrder, FindOptionsWhere, Like, MoreThan } from 'typeorm';
-import { Roles } from './enums/roles';
-import { v4 as uuidv4 } from 'uuid';
-import { addHours } from 'date-fns';
-import { PaginationService } from '../common/services/pagination.service';
 import { UsersPaginationDto } from './dto/users-pagination.dto';
+import { User } from './entities/users.entity';
 
 const userRepository = AppDataSource.getRepository(User);
-const paginationService = new PaginationService<User>();
 
 export const getAll = async (req: Request, res: Response): Promise<void> => {
   try {
