@@ -13,6 +13,7 @@ import { UsersPaginationDto } from './dto/users-pagination.dto';
 import { User } from './entities/users.entity';
 
 const userRepository = AppDataSource.getRepository(User);
+const paginationService = new PaginationService<User>();
 
 export const getAll = async (req: Request, res: Response): Promise<void> => {
   try {
