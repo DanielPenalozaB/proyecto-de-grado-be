@@ -1,0 +1,9 @@
+{
+    "build_pack": "nixpacks",
+    "base_directory": "/",
+    "publish_directory": "/dist/proyecto-de-grado-be",
+    "ports_exposes": "4000",
+    "settings": {
+        "is_static": false
+    }
+}
