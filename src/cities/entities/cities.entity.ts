@@ -7,7 +7,7 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Languages } from '../enums/language.enum';
+import { Languages } from '../../common/enums/language.enum';
 
 @Entity('cities')
 export class City {
