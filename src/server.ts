@@ -8,9 +8,9 @@ AppDataSource.initialize()
   .then(() => {
     console.log('Database connection has been established successfully.');
 
-    // Start Express server
-    app.listen(env.port, () => {
+    app.listen(env.port, '0.0.0.0', () => {
       console.log(`Server running on port ${env.port}`);
+      console.log(`Server is listening on all interfaces (0.0.0.0:${env.port})`);
       console.log(`API documentation available at http://localhost:${env.port}/api-docs`);
     });
   })
