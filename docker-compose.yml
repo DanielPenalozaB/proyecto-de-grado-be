@@ -55,6 +55,8 @@ services:
 networks:
   backend-network:
     driver: bridge
+  coolify-proxy:
+    external: true
 
 volumes:
   postgres_data:
