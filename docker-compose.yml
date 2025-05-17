@@ -28,13 +28,13 @@ services:
     container_name: ${API_CONTAINER_NAME:-proyecto-de-grado-api}
     restart: unless-stopped
     ports:
-      - "${PORT:-4000}:${PORT:-4000}"
+      - "4000:4000"  # Hardcoded (avoid variables)
     depends_on:
       postgres:
         condition: service_healthy
     environment:
       - NODE_ENV=${NODE_ENV:-production}
-      - PORT=${PORT:-4000}
+      - PORT=4000  # Hardcoded
       - DB_HOST=postgres
       - DB_PORT=5432
       - DB_USERNAME=${DB_USERNAME:-postgres}
@@ -42,6 +42,15 @@ services:
       - DB_DATABASE=${DB_DATABASE:-proyecto_db}
     networks:
       - backend-network
+      - coolify-proxy  # Connect to Coolify's proxy network
+    labels:
+      # Traefik-specific labels (Coolify uses Traefik by default)
+      - traefik.enable=true
+      - traefik.http.routers.api.rule=Host(`api.recoagua.com`)
+      - traefik.http.services.api.loadbalancer.server.port=4000
+      - traefik.http.routers.api.entrypoints=websecure
+      - traefik.http.routers.api.tls=true
+      - traefik.http.routers.api.tls.certresolver=letsencrypt
 
 networks:
   backend-network:
