@@ -27,27 +27,19 @@ RUN npm ci --only=production
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
 
-# Copy migrations folder for database setup
-COPY --from=builder /app/src/database/migrations ./dist/database/migrations
+# Copy necessary configuration files
+COPY .env.example ./
+COPY tsconfig.json ./
 
-# CRITICAL: Ensure the server explicitly listens on 0.0.0.0 to be accessible from outside
-# Create a startup script
-RUN echo '#!/bin/sh\n\
-# Wait for postgres\n\
-echo "Waiting for PostgreSQL..."\n\
-sleep 5\n\
-\n\
-# Run migrations\n\
-echo "Running database migrations..."\n\
-npm run migration:run || echo "Migration failed but continuing..."\n\
-\n\
-# Start the application - ensure it listens on all interfaces\n\
-echo "Starting application..."\n\
-exec node dist/server.js\n\
-' > /app/startup.sh && chmod +x /app/startup.sh
+# Create a non-root user and switch to it
+RUN addgroup -S appgroup && \
+    adduser -S appuser -G appgroup && \
+    chown -R appuser:appgroup /app
+
+USER appuser
 
 # Expose the application port
 EXPOSE 4000
 
-# Start the application using the startup script
-CMD ["/app/startup.sh"]
+# Start the application
+CMD ["node", "dist/server.js"]
