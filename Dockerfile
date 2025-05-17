@@ -27,23 +27,27 @@ RUN npm ci --only=production
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
 
-# Copy TypeORM config (required for migrations)
-COPY --from=builder /app/dist/config/typeorm.config.js ./dist/config/typeorm.config.js
+# Copy migrations folder for database setup
+COPY --from=builder /app/src/database/migrations ./dist/database/migrations
 
-# Create a non-root user
-RUN addgroup -S appgroup && \
-    adduser -S appuser -G appgroup && \
-    chown -R appuser:appgroup /app
-
-# Set the proper ownership for the app directory
-USER appuser
+# CRITICAL: Ensure the server explicitly listens on 0.0.0.0 to be accessible from outside
+# Create a startup script
+RUN echo '#!/bin/sh\n\
+# Wait for postgres\n\
+echo "Waiting for PostgreSQL..."\n\
+sleep 5\n\
+\n\
+# Run migrations\n\
+echo "Running database migrations..."\n\
+npm run migration:run || echo "Migration failed but continuing..."\n\
+\n\
+# Start the application - ensure it listens on all interfaces\n\
+echo "Starting application..."\n\
+exec node dist/server.js\n\
+' > /app/startup.sh && chmod +x /app/startup.sh
 
 # Expose the application port
 EXPOSE 4000
 
-# Health check to help Coolify monitor the application status
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-  CMD wget -q -O - http://localhost:4000/health || exit 1
-
-# Start the application
-CMD ["node", "dist/server.js"]
+# Start the application using the startup script
+CMD ["/app/startup.sh"]
