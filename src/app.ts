@@ -1,7 +1,6 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
-import { env } from './config/env';
 import router from './app.controller';
 import { errorHandler } from './middlewares/error-handler';
 import { swaggerDocs } from './config/swagger';
@@ -17,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Routes
-app.use(env.apiPrefix, router);
+app.use(router);
 
 // Health check
 app.get('/health', (req, res) => {
